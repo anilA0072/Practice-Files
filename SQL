@@ -1,0 +1,229 @@
+Install - Mysql workbench
+After installing and opening workbench we have to connect to the server
+open cmd - cd to MySQl bin file, then press enter
+           mysql -u root -p  then hit enter and provide password 
+          
+          
+SQL workbench
+Show databases;
+use database_name; -- to select db
+show tables; -- shows tables in selected db
+select * from table_name;
+describe table_name;
+create database database_name;
+count()
+sum()
+AS -- to give alias to column_name
+avg()
+Where 
+OR --- IN operator can also be used
+BETWEEN start AND end -- 
+AND
+GROUP BY 
+ORDER BY column_name DESC|ASC -- ASC is by default 
+Modify can't work on columns which contains details in it
+Create, Atler, Rename,TRUNCATE, Drop - Auto commit an't be Rollback 
+
+Create back-up table - CREATE TABLE table_name AS ( SELECT * from table_name);
+Restore table - INSERT into table_name (SELECT * from table_name);
+Delete/Truncate can be used to drop table records but DELETE query can be rollback but TRUNCATE can't
+RENAME currect_table_name TO New_table_name;
+SAVEPOINT savepoint_name; / ROLLBACK to savepoint_name;
+DATA type to store large dataset upto GB's - LOB (Large object) : -- CLOB (Character LOB) -- BLOB (Binary LOB)
+Foreign key reference -- References table_name(column_name with primary key) ON DELETE CASCADE -- Enables user to drop referenced records and table records
+rowid -- unique id to represent each record in oracle table
+** all_constraints/all_cons_columns are dictionary table for constraints 
+ALTER TABLE table_name Drop CONSTRAINT constraint_name;
+concat(concat("column1",' '), "column2") or column1||' '||column2-- To insert space between concate cells
+to_char, to_number, to_date --> select emp_name, DOJ,DATE_FORMAT(DOJ, '%y-%m-%d') from employees;
+
+
+create database mysql_intro;
+use mysql_intro;
+create table emp_details(
+Name varchar(25),
+Age int,
+Gender Char(1),
+DOJ date,
+City varchar(25),
+Salary float
+);
+
+Describe emp_details;
+
+insert into emp_details values("Anil Patel", 24, "M", "2019-01-23", "Mumbai" , 17000);
+
+select * from emp_details;
+
+select * from emp_details where DOJ between '2019-01-23' and '2020-03-25';
+
+select * from emp_details order by salary;
+
+select length('India') as total_length;
+select repeat('@', 10);
+select lower("ANIl");
+select upper("anil");
+select curdate();
+select day(curdate());
+select now();
+USING () --To join two table we can use using (column_name) common in both table
+IS NULL/ IS NOT NULL
+UNION -- Operator used to merge result of multiple queries vertically
+
+
+create database mysql_intro;
+use mysql_intro;
+create table emp_details(
+Name varchar(25),
+Age int,
+Gender Char(1),
+DOJ date,
+City varchar(25),
+Salary float
+);
+
+Describe emp_details;
+
+insert into emp_details values("Anil Patel", 24, "M", "2019-01-23", "Mumbai" , 17000);
+
+select * from emp_details;
+
+select * from emp_details where DOJ between '2019-01-23' and '2020-03-25';
+
+select * from emp_details order by salary;
+
+select length('India') as total_length;
+select repeat('@', 10);
+select lower("ANIl");
+select upper("anil");
+select curdate();
+select day(curdate());
+select now();
+
+
+
+#String Fuctions 
+show databases;
+use mysql_intro;
+show tables;
+select Name,reverse(city), replace(Age, 24, 25) as Age from emp_details;
+
+Select position("il" in Name) as loc from emp_details; 
+select ascii('#');
+
+#Group by & Having 
+Create table employees (Emp_Id int primary key, Emp_name varchar(30), 
+Age int, Gender char(1), DOJ date, 
+Dept varchar(20), City varchar(20), 
+Salary float);
+
+Describe employees;
+
+Insert into employees values (102, "Anne",24, "F", "2021/10/9","Sales","Chicago",120000),
+(105, "Mark",32, "M", "2021/10/14","Marketing","Seattle",98000),
+(107, "Ani",25, "M", "2021/10/31","Product","Boston",80000),
+(110, "Hrutvi",40, "F", "2021/11/4","HR","Mumbai",115000),
+(123, "Mariya",52, "F", "2021/11/24","IT","New Yark",50000),
+(119, "Laura",27, "F", "2019/6/19","Sales","London",130000),
+(101, "Jimmy",35, "M", "2020/12/5","Marketing","Paris",300000),
+(109, "Maya",29, "F", "2020/2/4","Sales","Japan",240000);
+
+select * from employees;
+select dept , round(avg(age),1) as Average_age from employees group by dept;
+
+select count(emp_id), city from employees group by city order by count(emp_id) desc;
+select year(DOJ) as year, count(emp_id) from employees group by year(DOJ) order by year(DOJ);
+
+
+create table sales ( porduct_id int,
+sell_price float,
+quantity int,
+state varchar(20));
+
+Alter table sales rename column porduct_id to product_id;
+
+Insert into sales values (201, 390, 20, "Colorado"),
+(221, 30, 90, "Colorado"),
+(309, 400, 170, "Texas"),
+(123, 120, 189, "Alaska"),
+(132, 90, 87, "califonia");
+Insert into sales values (201, 390, 30, "Califonia"),
+(123, 120, 119, "Texas"),
+(132, 90, 40, "Alaska");
+
+select * from sales;
+
+Create table cost_prod (Product_id  int, cot_price float);
+insert into cost_prod 
+values (201, 300),
+(221, 20),(309, 350), (123, 95),(132, 67);
+Alter table cost_prod rename column cot_price to cost_price;
+select product_id, sum(sell_price * quantity) as Revenue from sales group by product_id order by Revenue;
+
+select c.product_id, sum((s.sell_price - c.cost_price)* s.quantity) as profit from sales as s inner join cost_prod as c
+where s.product_id = c.product_id group by c.product_id order by profit;
+
+
+select * from employees;
+Select dept, avg(salary) Avg_salary from employees group by dept having avg(salary)>100000;
+
+select city, count(*) as emp_count
+from employees where city != "Mumbai"
+group by city
+having count(*) <2;
+
+select dept, count(*) as emp_count from employees
+where dept != 'HR'
+group by dept
+Having avg(salary)>100000;
+
+
+Create table cricket (cricket_id int auto_increment, name varchar(30), 
+primary key(cricket_id)); 
+
+Create table football (football_id int auto_increment, 
+name varchar(30), primary key(football_id)); 
+
+Insert into cricket  (name) values ('Stuart'), ('Michael'), ('Johnson'), ('Hayden'), ('Fleming'); 
+
+Insert into football  (name) values
+('Stuart'), ('Johnson'), ('Hayden'), ('Langer'), ('Astle'); 
+
+select * from football;
+Select * from Cricket;
+
+select * from cricket as c inner join football as f on 
+c.name=f.name;
+
+Show databases;
+use information_schema;
+show tables;
+
+select name from football inner join cricket
+using (name);
+
+
+Select a.column_name1, b.column_name2, c.column_name3 , sum(c.column_name4 * a.column_name5)
+from table1 as a INNER JOIN table2 as b on 
+a.column_name = b.column_name INNER JOIN 
+table3 as c on c.column_name_unique = b.column_name_unique 
+group by columns_name;
+
+#Self Join 
+select concat(m.lname, ",", m.fname) as manager, 
+concat (e.lanme, ",", e.fname) as employee
+from employees as e 
+inner join employees as m on 
+m.emp_id = e.reportsto group by manager;
+
+//To merge to tables into single table
+MERGE TargetProducts AS Target
+USING SourceProducts	AS Source
+ON Source.ProductID = Target.ProductID
+WHEN NOT MATCHED BY Target THEN
+    INSERT (ProductID,ProductName, Price) 
+    VALUES (Source.ProductID,Source.ProductName, Source.Price);
+    
+    
+    
+
